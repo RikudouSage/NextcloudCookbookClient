@@ -1,5 +1,7 @@
 package model
 
+import "encoding/json"
+
 type Nutrition struct {
 	Type                  string `json:"@type,omitzero"`
 	Calories              string `json:"calories,omitzero"`
@@ -14,4 +16,26 @@ type Nutrition struct {
 	SugarContent          string `json:"sugarContent,omitzero"`
 	TransFatContent       string `json:"transFatContent,omitzero"`
 	UnsaturatedFatContent string `json:"unsaturatedFatContent,omitzero"`
+}
+
+func (receiver *Nutrition) UnmarshalJSON(bytes []byte) error {
+	if string(bytes) == "[]" { // god bless unsanitized PHP's json_encode
+		*receiver = Nutrition{}
+		return nil
+	}
+
+	if bytes == nil || string(bytes) == "null" {
+		*receiver = Nutrition{}
+		return nil
+	}
+
+	type nutrition Nutrition
+
+	var value nutrition
+	if err := json.Unmarshal(bytes, &value); err != nil {
+		return err
+	}
+
+	*receiver = Nutrition(value)
+	return nil
 }
