@@ -2,6 +2,7 @@ package main
 
 /*
 #include "cb_common.h"
+#include <stdbool.h>
 
 typedef struct {
 	const char* url;
@@ -38,6 +39,29 @@ func CookbookNewClient(outHandle *C.ClientHandle, options C.NewClientOptions) C.
 
 	result := registerHandle(client)
 	*outHandle = C.ClientHandle(result)
+
+	clearLastError()
+	return CookbookSuccess
+}
+
+//export CookbookValidateCredentials
+func CookbookValidateCredentials(ctx C.ContextHandle, client C.ClientHandle, outValid *C.bool) C.CookbookResult {
+	if outValid == nil {
+		setLastError(nullPointerError("outValid"))
+		return CookbookError
+	}
+
+	ctxGo, clientGo, err := getContextAndClient(ctx, client)
+	if err != nil {
+		setLastError(err)
+		return CookbookError
+	}
+
+	if clientGo.ValidateCredentials(ctxGo) {
+		*outValid = true
+	} else {
+		*outValid = false
+	}
 
 	clearLastError()
 	return CookbookSuccess

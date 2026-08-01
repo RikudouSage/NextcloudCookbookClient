@@ -1,6 +1,7 @@
 package cookbook
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -12,6 +13,8 @@ type Client interface {
 	Categories() Categories
 	Tags() Tags
 	Misc() Misc
+
+	ValidateCredentials(ctx context.Context) bool
 }
 
 type client struct {
