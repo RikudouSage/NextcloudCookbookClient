@@ -7,6 +7,13 @@
 typedef int CookbookResult;
 typedef uint64_t Handle;
 typedef Handle ClientHandle;
+typedef Handle ContextHandle;
+
+
+typedef struct {
+    char** items;
+    size_t len;
+} StringSlice;
 
 enum {
     CookbookSuccess = 0,

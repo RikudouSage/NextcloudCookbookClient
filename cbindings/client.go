@@ -1,6 +1,8 @@
 package main
 
 /*
+#include "cb_common.h"
+
 typedef struct {
 	const char* url;
 	const char* username;
@@ -28,7 +30,7 @@ func CookbookNewClient(outHandle *C.ClientHandle, options C.NewClientOptions) C.
 		goOptions = append(goOptions, cookbook.WithPassword(C.GoString(options.password)))
 	}
 
-	client, err := cookbook.NewClient(options...)
+	client, err := cookbook.NewClient(goOptions...)
 	if err != nil {
 		setLastError(err)
 		return CookbookError

@@ -1,3 +1,5 @@
 /.idea
 /.direnv
 /*.iml
+/libcookbook.h
+/libcookbook.so
