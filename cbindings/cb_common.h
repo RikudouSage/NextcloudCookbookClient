@@ -6,6 +6,7 @@
 
 typedef int CookbookResult;
 typedef uint64_t Handle;
+typedef Handle ClientHandle;
 
 enum {
     CookbookSuccess = 0,
