@@ -21,10 +21,24 @@ func getClient(clientHandle C.ClientHandle) (cookbook.Client, error) {
 }
 
 func getContext(ctxHandle C.ContextHandle) (context.Context, error) {
-	ctx, err := getHandleObj[contextHandle](handle(ctxHandle))
+	ctx, err := getHandleObj[*contextHandle](handle(ctxHandle))
 	if err != nil {
 		return nil, fmt.Errorf("failed getting context out of the handle: %w", err)
 	}
 
 	return ctx.ctx, nil
+}
+
+func getContextAndClient(ctxHandle C.ContextHandle, clientHandle C.ClientHandle) (context.Context, cookbook.Client, error) {
+	ctx, err := getContext(ctxHandle)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	client, err := getClient(clientHandle)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return ctx, client, nil
 }

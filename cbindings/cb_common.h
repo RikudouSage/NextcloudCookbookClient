@@ -15,6 +15,11 @@ typedef struct {
     size_t len;
 } StringSlice;
 
+typedef struct {
+    uint8_t* items;
+    size_t len;
+} ByteSlice;
+
 enum {
     CookbookSuccess = 0,
     CookbookError = 1,

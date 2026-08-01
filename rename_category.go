@@ -14,7 +14,7 @@ func (receiver *categories) Rename(ctx context.Context, category *model.Category
 		ctx,
 		receiver.httpClient,
 		http.MethodPut,
-		urlWithPath(receiver.url, fmt.Sprintf("category/%s", category)),
+		urlWithPath(receiver.url, fmt.Sprintf("category/%s", category.Name)),
 		map[string]string{
 			"name": newName,
 		},

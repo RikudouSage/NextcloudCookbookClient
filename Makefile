@@ -17,26 +17,26 @@ build-lib-arm7:
 release-lib-current: build-lib-current
 	mkdir -p out/current-os
 	mv libcookbook.so out/current-os/
-	mv libbw.h out/current-os/
-	cp cbindings/bw_*.h out/current-os/
+	mv libcookbook.h out/current-os/
+	cp cbindings/cb_*.h out/current-os/
 
 release-lib-386: build-lib-386
 	mkdir -p out/386
 	mv libcookbook.so out/386/
-	mv libbw.h out/386/
-	cp cbindings/bw_*.h out/386/
+	mv libcookbook.h out/386/
+	cp cbindings/cb_*.h out/386/
 
 release-lib-arm7: build-lib-arm7
 	mkdir -p out/arm7
 	mv libcookbook.so out/arm7/
-	mv libbw.h out/arm7/
-	cp cbindings/bw_*.h out/arm7/
+	mv libcookbook.h out/arm7/
+	cp cbindings/cb_*.h out/arm7/
 
 release-lib-arm64: build-lib-arm64
 	mkdir -p out/arm64
 	mv libcookbook.so out/arm64/
-	mv libbw.h out/arm64/
-	cp cbindings/bw_*.h out/arm64/
+	mv libcookbook.h out/arm64/
+	cp cbindings/cb_*.h out/arm64/
 
 release-all: release-lib-current release-lib-arm7 release-lib-386 release-lib-arm64
 
