@@ -21,5 +21,9 @@ func (receiver *recipes) Update(ctx context.Context, recipe *model.Recipe) (*mod
 		return nil, fmt.Errorf("failed updating recipe: %w", err)
 	}
 
+	if err = recipe.SetBaseURL(receiver.url); err != nil {
+		return nil, fmt.Errorf("failed setting base url: %w", err)
+	}
+
 	return recipe, nil
 }

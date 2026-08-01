@@ -1,6 +1,8 @@
 package model
 
 import (
+	"net/url"
+
 	"github.com/sosodev/duration"
 	"go.chrastecky.dev/nextcloud-cookbook/cookbook/types"
 )
@@ -26,4 +28,8 @@ type Recipe struct {
 	Ingredients         []string           `json:"recipeIngredient,omitempty"`
 	Instructions        []string           `json:"recipeInstructions,omitempty"`
 	Nutrition           Nutrition          `json:"nutrition,omitzero"`
+}
+
+func (receiver *Recipe) SetBaseURL(baseURL *url.URL) error {
+	return populateAbsoluteUrls(receiver, baseURL)
 }

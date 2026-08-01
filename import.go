@@ -3,6 +3,7 @@ package cookbook
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"go.chrastecky.dev/nextcloud-cookbook/cookbook/model"
@@ -25,6 +26,12 @@ func (receiver *recipes) Import(ctx context.Context, url string) (*model.Recipe,
 
 	if err != nil && err.Error() == "unexpected status code: 409" {
 		return nil, ErrRecipeAlreadyExists
+	} else if err != nil {
+		return nil, fmt.Errorf("failed importing: %w", err)
+	}
+
+	if err = resp.SetBaseURL(receiver.url); err != nil {
+		return nil, fmt.Errorf("failed setting base url: %w", err)
 	}
 
 	return resp, nil

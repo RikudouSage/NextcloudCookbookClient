@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/samber/lo"
 	"go.chrastecky.dev/nextcloud-cookbook/cookbook/model"
 )
 
 func (receiver *recipes) Search(ctx context.Context, query string) ([]*model.RecipeStub, error) {
-	return request[[]*model.RecipeStub](
+	items, err := request[[]*model.RecipeStub](
 		ctx,
 		receiver.httpClient,
 		http.MethodGet,
@@ -17,4 +18,16 @@ func (receiver *recipes) Search(ctx context.Context, query string) ([]*model.Rec
 		nil,
 		receiver.username, receiver.password,
 	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed searching for recipes: %w", err)
+	}
+
+	return lo.MapErr(items, func(item *model.RecipeStub, _ int) (*model.RecipeStub, error) {
+		if err := item.SetBaseURL(receiver.url); err != nil {
+			return nil, fmt.Errorf("failed setting base url: %w", err)
+		}
+
+		return item, nil
+	})
 }
