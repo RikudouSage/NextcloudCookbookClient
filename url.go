@@ -4,23 +4,20 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+
+	"go.chrastecky.dev/nextcloud-cookbook/cookbook/internal/helper"
 )
 
 func urlWithPath(uri *url.URL, path string) *url.URL {
 	const prefix = "/apps/cookbook/api/v1"
+	path = "/" + strings.TrimPrefix(path, "/")
 	if !strings.HasPrefix(path, prefix) {
-		if strings.HasPrefix(path, "/") {
-			path = path[1:]
-		}
-		path = fmt.Sprintf("%s/%s", prefix, path)
-	}
-
-	if !strings.HasPrefix(path, "/") {
-		path = "/" + path
+		path = fmt.Sprintf("%s/%s", prefix, strings.TrimPrefix(path, "/"))
 	}
 
 	clone := new(*uri)
-	clone.Path = path
+	clone.Path = helper.JoinURLPath(uri.Path, path)
+	clone.RawPath = ""
 
 	return clone
 }

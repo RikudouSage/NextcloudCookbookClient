@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"reflect"
 
+	"go.chrastecky.dev/nextcloud-cookbook/cookbook/internal/helper"
 	"go.chrastecky.dev/nextcloud-cookbook/cookbook/types"
 )
 
@@ -28,11 +29,16 @@ func populateAbsoluteUrls(in any, baseURL *url.URL) error {
 		}
 
 		apiUrl := val.Interface().(*types.APIURL)
+		isRelativeURL := apiUrl.Scheme == "" && apiUrl.Host == ""
 		if apiUrl.Scheme == "" {
 			apiUrl.Scheme = baseURL.Scheme
 		}
 		if apiUrl.Host == "" {
 			apiUrl.Host = baseURL.Host
+		}
+		if isRelativeURL && baseURL.Path != "" {
+			apiUrl.Path = helper.JoinURLPath(baseURL.Path, apiUrl.Path)
+			apiUrl.RawPath = ""
 		}
 	}
 
