@@ -57,12 +57,11 @@ func CookbookValidateCredentials(ctx C.ContextHandle, client C.ClientHandle, out
 		return CookbookError
 	}
 
-	if clientGo.ValidateCredentials(ctxGo) {
-		*outValid = true
-	} else {
-		*outValid = false
+	valid, err := clientGo.ValidateCredentials(ctxGo)
+	if err != nil {
+		setLastError(err)
 	}
 
-	clearLastError()
+	*outValid = C.bool(valid)
 	return CookbookSuccess
 }

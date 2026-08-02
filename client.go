@@ -14,7 +14,7 @@ type Client interface {
 	Tags() Tags
 	Misc() Misc
 
-	ValidateCredentials(ctx context.Context) bool
+	ValidateCredentials(ctx context.Context) (bool, error)
 }
 
 type client struct {

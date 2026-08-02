@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func (receiver *client) ValidateCredentials(ctx context.Context) bool {
+func (receiver *client) ValidateCredentials(ctx context.Context) (bool, error) {
 	_, err := request[any](
 		ctx,
 		receiver.httpClient,
@@ -15,5 +15,5 @@ func (receiver *client) ValidateCredentials(ctx context.Context) bool {
 		receiver.username, receiver.password,
 	)
 
-	return err == nil
+	return err == nil, err
 }
