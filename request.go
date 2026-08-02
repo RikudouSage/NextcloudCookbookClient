@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 func request[TResponse any](
@@ -19,6 +20,8 @@ func request[TResponse any](
 	body any,
 	username, password string,
 ) (TResponse, error) {
+	isDebug := os.Getenv("REQUEST_DEBUG") == "true"
+
 	var requestBody io.Reader
 	var out TResponse
 
@@ -57,13 +60,16 @@ func request[TResponse any](
 		_ = resp.Body.Close()
 	}()
 
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return out, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
-
 	responseBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return out, fmt.Errorf("failed reading response body: %w", err)
+	}
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		if isDebug {
+			return out, fmt.Errorf("unexpected status code: %d, body: %s", resp.StatusCode, responseBody)
+		}
+		return out, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
 	if _, ok := any(out).([]byte); ok {
