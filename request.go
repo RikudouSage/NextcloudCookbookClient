@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+
+	clone "github.com/huandu/go-clone/generic"
 )
 
 func request[TResponse any](
@@ -24,6 +26,10 @@ func request[TResponse any](
 
 	var requestBody io.Reader
 	var out TResponse
+
+	if err := validateAndNormalizeNextcloudURL(ctx, httpClient, url); err != nil {
+		return out, fmt.Errorf("failed normalizing request url: %w", err)
+	}
 
 	if body != nil {
 		var processedBody []byte
@@ -41,7 +47,10 @@ func request[TResponse any](
 		requestBody = bytes.NewReader(processedBody)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, method, url.String(), requestBody)
+	newUrl := clone.Clone(url)
+	newUrl.Fragment = ""
+
+	req, err := http.NewRequestWithContext(ctx, method, newUrl.String(), requestBody)
 	if err != nil {
 		return out, fmt.Errorf("failed creating request: %w", err)
 	}
