@@ -3,6 +3,8 @@ package types
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/ijt/go-anytime"
 )
 
 const compactOffsetLayout = "2006-01-02T15:04:05-0700"
@@ -22,7 +24,7 @@ func (receiver *APITime) UnmarshalJSON(bytes []byte) error {
 		return nil
 	}
 
-	parsed, err := time.Parse(time.RFC3339, value)
+	parsed, err := anytime.Parse(value, time.Now())
 	if err != nil {
 		parsed, err = time.Parse(compactOffsetLayout, value)
 		if err != nil {
