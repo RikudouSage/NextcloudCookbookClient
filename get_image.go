@@ -22,5 +22,6 @@ func (receiver *recipes) Image(ctx context.Context, ID string, size ImageSize) (
 		urlWithPath(receiver.url, fmt.Sprintf("/recipes/%s/image", ID)),
 		nil,
 		receiver.username, receiver.password,
+		withHeader("Accept", "image/*"),
 	)
 }

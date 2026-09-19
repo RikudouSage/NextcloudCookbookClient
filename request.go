@@ -14,6 +14,14 @@ import (
 	clone "github.com/huandu/go-clone/generic"
 )
 
+type requestOption func(req *http.Request)
+
+func withHeader(name, value string) requestOption {
+	return func(req *http.Request) {
+		req.Header.Set(name, value)
+	}
+}
+
 func request[TResponse any](
 	ctx context.Context,
 	httpClient *http.Client,
@@ -21,6 +29,7 @@ func request[TResponse any](
 	url *url.URL,
 	body any,
 	username, password string,
+	options ...requestOption,
 ) (TResponse, error) {
 	isDebug := os.Getenv("REQUEST_DEBUG") == "true"
 
@@ -58,6 +67,10 @@ func request[TResponse any](
 	req.SetBasicAuth(username, password)
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
+	}
+
+	for _, option := range options {
+		option(req)
 	}
 
 	resp, err := httpClient.Do(req)
